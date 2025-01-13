@@ -1,6 +1,6 @@
 import { Request, Response, RequestHandler } from 'express';
 import { campaignUtils } from '../gophishutils/campaignUtils';
-import supabaseClient from '../supabaseClient';
+import supabaseClient from '../../supabaseClient';
 import { Campaign } from '../model/gophish';
 
 export const createCampaign: RequestHandler = async (req: Request, res: Response) => {
@@ -42,7 +42,11 @@ export const createCampaign: RequestHandler = async (req: Request, res: Response
 export const getAllCampaigns: RequestHandler = async (req: Request, res: Response) => {
     try {
         const campaigns = await campaignUtils.getAllCampaigns();
-        res.status(200).json(campaigns);
+        const { data, error } = await supabaseClient.from('campaigns').select('*');
+        if (error) {
+            throw new Error(`Failed to fetch campaigns from Supabase: ${error.message}`);
+        }
+        res.status(200).json({ gophishCampaigns: campaigns, supabaseCampaigns: data });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -51,7 +55,11 @@ export const getAllCampaigns: RequestHandler = async (req: Request, res: Respons
 export const getCampaign: RequestHandler = async (req: Request, res: Response) => {
     try {
         const campaign = await campaignUtils.getCampaign(parseInt(req.params.id));
-        res.status(200).json(campaign);
+        const { data, error } = await supabaseClient.from('campaigns').select('*').eq('id', req.params.id);
+        if (error) {
+            throw new Error(`Failed to fetch campaign from Supabase: ${error.message}`);
+        }
+        res.status(200).json({ gophishCampaign: campaign, supabaseCampaign: data });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -60,7 +68,11 @@ export const getCampaign: RequestHandler = async (req: Request, res: Response) =
 export const completeCampaign: RequestHandler = async (req: Request, res: Response) => {
     try {
         const campaign = await campaignUtils.completeCampaign(parseInt(req.params.id));
-        res.status(200).json(campaign);
+        const { data, error } = await supabaseClient.from('campaigns').select('*').eq('id', req.params.id);
+        if (error) {
+            throw new Error(`Failed to fetch campaign from Supabase: ${error.message}`);
+        }
+        res.status(200).json({ gophishCampaign: campaign, supabaseCampaign: data });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

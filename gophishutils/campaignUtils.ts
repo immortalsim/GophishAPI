@@ -1,10 +1,10 @@
-import gophishClient from '../client'
+import {gophishApiClient} from '../../gophishClient'
 import { Campaign, Group, Template } from '../model/gophish'
 
 export const campaignUtils = {
     // Create a new campaign
     async createCampaign(campaign: Campaign): Promise<Campaign> {
-        const response = await gophishClient.post('/campaigns/', campaign)
+        const response = await gophishApiClient.post('/campaigns/', campaign)
         if (response.status !== 201) {
             throw new Error(`Failed to create campaign: ${response.data.message}`)
         }
@@ -13,7 +13,7 @@ export const campaignUtils = {
 
     // Get all campaigns
     async getAllCampaigns(): Promise<Campaign[]> {
-        const response = await gophishClient.get('/campaigns/')
+        const response = await gophishApiClient.get('/campaigns/')
         if (response.status !== 200) {
             throw new Error(`Failed to fetch campaigns: ${response.data.message}`)
         }
@@ -22,7 +22,7 @@ export const campaignUtils = {
 
     // Get campaign by ID
     async getCampaign(id: number): Promise<Campaign> {
-        const response = await gophishClient.get(`/campaigns/${id}`)
+        const response = await gophishApiClient.get(`/campaigns/${id}`)
         if (response.status !== 200) {
             throw new Error(`Failed to fetch campaign: ${response.data.message}`)
         }
@@ -31,7 +31,7 @@ export const campaignUtils = {
 
     // Complete a campaign
     async completeCampaign(id: number): Promise<Campaign> {
-        const response = await gophishClient.get(`/campaigns/${id}/complete`)
+        const response = await gophishApiClient.get(`/campaigns/${id}/complete`)
         if (response.status !== 200) {
             throw new Error(`Failed to complete campaign: ${response.data.message}`)
         }
