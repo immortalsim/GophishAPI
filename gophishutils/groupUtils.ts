@@ -1,7 +1,7 @@
 import gophishClient from '../client'
 import { Group } from '../model/gophish'
 
-export const groupController = {
+export const groupUtils = {
     // Create a new group
     async createGroup(group: Group): Promise<Group> {
         const response = await gophishClient.post('/groups/', group)
@@ -45,4 +45,4 @@ export const groupController = {
             throw new Error(`Failed to delete group: ${response.data.message}`)
         }
     }
-} 
+}
